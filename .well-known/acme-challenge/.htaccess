@@ -1,0 +1,25 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Убираем index.html → /
+    RewriteCond %{THE_REQUEST} /index\.html [NC]
+    RewriteRule ^index\.html$ / [R=301,L]
+
+    # Убираем .html из ссылок (редирект)
+    RewriteCond %{THE_REQUEST} \s/+([^.]+)\.html [NC]
+    RewriteRule ^ %1 [R=301,L]
+
+    # Чтобы открывались файлы без .html
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^ %{REQUEST_URI}.html [L]
+</IfModule>
+
+# Требуется для корректного доступа
+Satisfy Any
+Order Deny,Allow
+Allow from all
+
+<FilesMatch "^\.">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
